@@ -83,7 +83,7 @@ public class OrderService extends OrderDiImpl {
 	}
 }
 ----
-TIP: Data模块没有PersisterFactory的具体实现，需参考link:../weforward-data-mongodb/README.adoc[Weforward Data Mongodb]实现
+TIP: Data模块没有PersisterFactory的具体实现，需参考link:../../weforward-data-mongodb/README.adoc[Weforward Data Mongodb]实现
 
 
 4.条件搜索
@@ -152,7 +152,7 @@ ps.search(ConditionUtil.eq(ConditionUtil.field("m_Vo","m_Name"), "HelloWorld"));
 
 5.建立索引 
 
-条件搜索理论上支持持久类的所有属性，但是直接按这些属性条件搜索可以效率会比较低，所以我们需要对经常用来查询的属性建议索引 
+条件搜索理论上支持持久类的所有属性，但是直接按这些属性条件搜索可以效率会比较低，所以我们需要对经常用来查询的属性建立索引 
 
 [source,java]
 ----
