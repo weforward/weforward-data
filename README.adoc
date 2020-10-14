@@ -83,7 +83,7 @@ public class OrderService extends OrderDiImpl {
 	}
 }
 ----
-TIP: Data模块没有PersisterFactory的具体实现，需参考link:../../weforward-data-mongodb/README.adoc[Weforward Data Mongodb]实现
+TIP: Data模块没有PersisterFactory的具体实现，需参考link:../../../weforward-data-mongodb/README.adoc[Weforward Data Mongodb]实现
 
 
 4.条件搜索
