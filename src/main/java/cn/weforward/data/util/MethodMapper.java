@@ -12,6 +12,7 @@ package cn.weforward.data.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -122,6 +123,9 @@ public class MethodMapper<E> extends AutoObjectMapper<E> {
 	}
 
 	private static Map<String, Method> getGetMethods(Class<?> clazz) {
+		if (String.class == clazz || Date.class == clazz) {
+			return Collections.emptyMap();
+		}
 		Map<String, Method> map = CLASS_GET_MAP.get(clazz);
 		if (null != map) {
 			return map;
@@ -132,7 +136,6 @@ public class MethodMapper<E> extends AutoObjectMapper<E> {
 			return old;
 		}
 		Method[] ms = clazz.getMethods();
-		map = new HashMap<String, Method>(ms.length - 1);
 		for (Method m : ms) {
 			if (m.getParameterTypes().length > 0) {
 				continue;// 有参数
@@ -163,6 +166,9 @@ public class MethodMapper<E> extends AutoObjectMapper<E> {
 	}
 
 	private static Map<String, Method> getSetMethods(Class<?> clazz) {
+		if (String.class == clazz || Date.class == clazz) {
+			return Collections.emptyMap();
+		}
 		Map<String, Method> map = CLASS_SET_MAP.get(clazz);
 		if (null != map) {
 			return map;
@@ -173,7 +179,6 @@ public class MethodMapper<E> extends AutoObjectMapper<E> {
 			return old;
 		}
 		Method[] ms = clazz.getMethods();
-		map = new HashMap<String, Method>(ms.length);
 		for (Method m : ms) {
 			if (m.getParameterTypes().length != 1) {
 				continue;
@@ -378,27 +383,26 @@ public class MethodMapper<E> extends AutoObjectMapper<E> {
 	}
 
 	@Override
-	public Enumeration<String> getIndexAttributeNames() {
+	public Enumeration<String> getIndexAttributeNames(int maxdeepin) {
 		List<String> indexs = new ArrayList<>();
 		for (Map.Entry<String, Method> e : getGetMethods().entrySet()) {
-			indexs = findIndex(e.getKey(), e.getValue(), indexs);
+			findIndex(e.getKey(), e.getValue(), indexs, 0, maxdeepin);
 		}
 		return new ListEnumeration<String>(indexs);
 	}
 
-	private List<String> findIndex(String name, Method method, List<String> indexs) {
-		if (null == indexs) {
-			indexs = new ArrayList<>();
+	private void findIndex(String name, Method method, List<String> indexs, int deepin, int maxdeepin) {
+		if (deepin >= maxdeepin) {
+			return;
 		}
 		if (method.isAnnotationPresent(Index.class)) {
-			indexs.add(name);
-		} else {
-			for (Map.Entry<String, Method> e : getGetMethods(method.getReturnType()).entrySet()) {
-				name = name + Condition.FIELD_SPEARATOR + e.getKey();
-				indexs = findIndex(name, e.getValue(), indexs);
+			if (!indexs.contains(name)) {
+				indexs.add(name);
 			}
 		}
-		return indexs;
+		for (Map.Entry<String, Method> e : getGetMethods(method.getReturnType()).entrySet()) {
+			findIndex(name + Condition.FIELD_SPEARATOR + e.getKey(), e.getValue(), indexs, deepin + 1, maxdeepin);
+		}
 	}
 
 }

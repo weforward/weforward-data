@@ -375,25 +375,26 @@ public class FieldMapper<E> extends AutoObjectMapper<E> {
 	}
 
 	@Override
-	public Enumeration<String> getIndexAttributeNames() {
+	public Enumeration<String> getIndexAttributeNames(int maxdeepin) {
 		List<String> indexs = new ArrayList<>();
 		for (Map.Entry<String, Field> e : getFields().entrySet()) {
-			indexs = findIndex(e.getKey(), e.getValue(), indexs);
+			findIndex(e.getKey(), e.getValue(), indexs, 0, maxdeepin);
 		}
 		return new ListEnumeration<String>(indexs);
 	}
 
-	private List<String> findIndex(String name, Field field, List<String> indexs) {
-		if (null == indexs) {
-			indexs = new ArrayList<>();
+	private void findIndex(String name, Field field, List<String> indexs, int deepin, int maxdeepin) {
+		if (deepin >= maxdeepin) {
+			return;
 		}
 		if (field.isAnnotationPresent(Index.class)) {
-			indexs.add(name);
+			if (!indexs.contains(name)) {
+				indexs.add(name);
+			}
 		}
 		for (Map.Entry<String, Field> e : getFields(field.getType()).entrySet()) {
-			indexs = findIndex(name + Condition.FIELD_SPEARATOR + e.getKey(), e.getValue(), indexs);
+			findIndex(name + Condition.FIELD_SPEARATOR + e.getKey(), e.getValue(), indexs, deepin + 1, maxdeepin);
 		}
-		return indexs;
 	}
 
 }

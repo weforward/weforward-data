@@ -108,7 +108,7 @@ public class OrderByUtil {
 				}
 			}
 			if (null != desc) {
-				for (String n : asc) {
+				for (String n : desc) {
 					list.add(new SingleOrderBy(n, SingleOrderBy.DESC));
 				}
 			}

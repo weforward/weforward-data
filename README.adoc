@@ -463,7 +463,8 @@ m_Factory.createLabelSet("mylabel", MethodMapper.valueOf(MyLabel.class));
 
 === 基础类型
 |===
-类型|默认值
+|类型
+|默认值
 
 |byte
 |0

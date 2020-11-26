@@ -21,7 +21,8 @@ import cn.weforward.data.util.Flushable;
  * 
  * @author liangyi
  *
- * @param <E> 可持久化对象
+ * @param <E>
+ *            可持久化对象
  */
 public abstract class PersistentCache<E extends Persistent> extends LruCache<String, E> {
 	/** 标示正处理更新中，这种状态下的版本号可认为是相同的 */
@@ -53,13 +54,16 @@ public abstract class PersistentCache<E extends Persistent> extends LruCache<Str
 
 		@Override
 		public void flush() throws IOException {
+			E v = getValue();
 			if (!isDirty()) {
 				if (_Logger.isTraceEnabled()) {
 					_Logger.trace("unchanged:" + this);
 				}
 				return;
 			}
-			persist(getValue(), this);
+			persist(v, this);
+			// persist(getValue(), this);
+			putLru(this);
 		}
 
 		/**
@@ -72,20 +76,32 @@ public abstract class PersistentCache<E extends Persistent> extends LruCache<Str
 		@Override
 		public String toString() {
 			int tick = _clock.getTicker();
-			return "{id:" + key + ",t:" + (tick - lastAccess) + ",r:" + (tick - lastReady) + ",ver:" + this.version
-					+ ",obj:" + value + '}';
+			return "{id:" + key + ",t:" + (tick - lastAccess) + ",r:" + (tick - lastReady) + ",ver:"
+					+ this.version + ",obj:" + value + '}';
 		}
 	}
 
 	public PersistentCache(String name) {
 		super(name);
+		// 启用弱引用检查缓存对象来保持单例
+		setReachable(true);
+		// 1秒的空项重加载间隔
+		setNullTimeout(1);
+		// 缓存项空闲时间15分钟
+		setTimeout(15 * 60);
+	}
+
+	public int getNullTimeout() {
+		return m_NullTimeout;
 	}
 
 	/**
 	 * 把对象持久化
 	 * 
-	 * @param object 要持久化的对象
-	 * @param node   对应的缓存节点
+	 * @param object
+	 *            要持久化的对象
+	 * @param node
+	 *            对应的缓存节点
 	 * @return 持久化后的版本号
 	 */
 	protected abstract String persist(E object, PersistNode node);
@@ -93,7 +109,8 @@ public abstract class PersistentCache<E extends Persistent> extends LruCache<Str
 	/**
 	 * 标记（可能是）新的持久化对象（用于对象未刷写前能进行查询）
 	 * 
-	 * @param object （可能是）新的持久化对象
+	 * @param object
+	 *            （可能是）新的持久化对象
 	 * @return 持久化后的版本号
 	 */
 	protected abstract String newer(E object);
@@ -126,7 +143,8 @@ public abstract class PersistentCache<E extends Persistent> extends LruCache<Str
 	/**
 	 * 把状态变化对象置入缓存
 	 * 
-	 * @param object 状态变化的对象
+	 * @param object
+	 *            状态变化的对象
 	 * @return 缓存节点
 	 */
 	protected PersistNode updating(E object) {
@@ -151,16 +169,12 @@ public abstract class PersistentCache<E extends Persistent> extends LruCache<Str
 				_Logger.error(ex.getMessage(), ex);
 			}
 		}
-		// // 在Flusher中登记更新项
-		// if (null != m_Flusher) {
-		// m_Flusher.mark(node);
-		// }
-		// if (_Logger.isDebugEnabled() && null != old && object != old) {
-		// _Logger.debug("Update/replace instance on cache [" + key + "]"
-		// + ((null == old) ? 0 : old.hashCode()) + " => "
-		// + ((null == object) ? 0 : object.hashCode()));
-		// }
 		return node;
+	}
+
+	@Override
+	protected void afterNodeUpdate(Node<String, E> p) {
+		putLru(p);
 	}
 
 	protected PersistNode flush(E object) {

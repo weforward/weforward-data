@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cn.weforward.common.sys.StackTracer;
+import cn.weforward.common.util.NumberUtil;
 import cn.weforward.common.util.StringUtil;
 import cn.weforward.data.UniteId;
 import cn.weforward.protocol.datatype.DtBase;
@@ -67,8 +68,12 @@ import cn.weforward.protocol.support.datatype.SimpleDtString;
  *
  */
 public abstract class AutoObjectMapper<E> extends AbstractObjectMapper<E> {
+	/** 索引属性的深度 */
+	public static final int INDEX_DEEPIN = NumberUtil.toInt(System.getProperty("cn.weforward.data.util.indexdeepin"),
+			6);
 	/** 日志 */
 	private static final Logger _Logger = LoggerFactory.getLogger(AutoObjectMapper.class);
+
 	/** 空数组 */
 	protected static Object[] _EMPTY = new Object[] {};
 	/** 对应类 */
@@ -97,7 +102,17 @@ public abstract class AutoObjectMapper<E> extends AbstractObjectMapper<E> {
 	 * 
 	 * @return 属性
 	 */
-	public abstract Enumeration<String> getIndexAttributeNames();
+	public Enumeration<String> getIndexAttributeNames() {
+		return getIndexAttributeNames(INDEX_DEEPIN);
+	}
+
+	/**
+	 * 获取索引名属性名称
+	 * 
+	 * @param maxdeepin 属性的最大深度(层级) 
+	 * @return 属性
+	 */
+	public abstract Enumeration<String> getIndexAttributeNames(int maxdeepin);
 
 	@SuppressWarnings("unchecked")
 	public static <E> Constructor<E> getConstructor(Class<E> clazz, Object[] parameters) {
