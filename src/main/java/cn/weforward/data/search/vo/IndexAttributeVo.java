@@ -36,7 +36,25 @@ public class IndexAttributeVo implements IndexAttribute {
 		m_Value = value;
 	}
 
+	/**
+	 * 构造类
+	 * 
+	 * @param 参数对
+	 * @return 属性vo
+	 * @deprecated 拼写错误使用 {@link #valueOf(KvPair)}
+	 */
+	@Deprecated
 	public static IndexAttributeVo vlaueOf(KvPair<String, String> pair) {
+		return valueOf(pair);
+	}
+
+	/**
+	 * 构造类
+	 * 
+	 * @param 参数对
+	 * @return 属性vo
+	 */
+	public static IndexAttributeVo valueOf(KvPair<String, String> pair) {
 		return new IndexAttributeVo(pair.getKey(), pair.getValue());
 	}
 

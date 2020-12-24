@@ -40,7 +40,8 @@ public class BusinessLogVo implements BusinessLog {
 
 	}
 
-	public BusinessLogVo(String id, Date time, String target, String author, String action, String what, String note) {
+	public BusinessLogVo(String id, Date time, String target, String author, String action,
+			String what, String note) {
 		m_Id = id;
 		m_Time = time;
 		m_Target = target;
@@ -53,7 +54,8 @@ public class BusinessLogVo implements BusinessLog {
 	/**
 	 * 构造对象
 	 * 
-	 * @param log 日志对象
+	 * @param log
+	 *            日志对象
 	 * @return 日志VO对象
 	 */
 	public static BusinessLogVo valueOf(BusinessLog log) {
@@ -63,8 +65,8 @@ public class BusinessLogVo implements BusinessLog {
 		if (log instanceof BusinessLogVo) {
 			return (BusinessLogVo) log;
 		} else {
-			return new BusinessLogVo(log.getId(), log.getTime(), log.getTarget(), log.getAuthor(), log.getAction(),
-					log.getWhat(), log.getNote());
+			return new BusinessLogVo(log.getId(), log.getTime(), log.getTarget(), log.getAuthor(),
+					log.getAction(), log.getWhat(), log.getNote());
 		}
 	}
 
@@ -131,4 +133,9 @@ public class BusinessLogVo implements BusinessLog {
 		return m_Note;
 	}
 
+	@Override
+	public String toString() {
+		return "{id:" + m_Id + ",time:" + m_Time + ",target:" + m_Target + ",author:" + m_Author
+				+ ",action:" + m_Action + ",what:" + m_What + ",note:" + m_Note + "}";
+	}
 }

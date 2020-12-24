@@ -42,8 +42,11 @@ public abstract class AbstractCounterFactory implements CounterFactory {
 		if (null != c) {
 			return c;
 		}
-		c = doCreateCounter(name);
-		Counter old = m_Items.putIfAbsent(name, c);
+		Counter old;
+		synchronized (this) {
+			c = doCreateCounter(name);
+			old = m_Items.putIfAbsent(name, c);
+		}
 		return null == old ? c : old;
 	}
 
@@ -53,12 +56,13 @@ public abstract class AbstractCounterFactory implements CounterFactory {
 		if (null != c) {
 			throw new IllegalArgumentException("已存在同名的计数器[" + name + "]");
 		}
-		c = doCreateCounter(name);
-		if (null == m_Items.putIfAbsent(name, c)) {
-			return c;
-		} else {
-			throw new IllegalArgumentException("已存在同名的计数器[" + name + "]");
+		synchronized (this) {
+			c = doCreateCounter(name);
+			if (null == m_Items.putIfAbsent(name, c)) {
+				return c;
+			}
 		}
+		throw new IllegalArgumentException("已存在同名的计数器[" + name + "]");
 	}
 
 	@Override

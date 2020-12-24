@@ -44,8 +44,7 @@ import cn.weforward.data.util.Flusher;
  * 
  * @author daibo
  * 
- * @param <E>
- *            持久对象子类
+ * @param <E> 持久对象子类
  */
 public abstract class AbstractPersister<E extends Persistent> implements Persister<E> {
 	/** 日志记录器 */
@@ -77,8 +76,8 @@ public abstract class AbstractPersister<E extends Persistent> implements Persist
 			if (ov.getObject() instanceof PersistentListener) {
 				// 调用持久对象反射后事件
 				PersistentListener listener = (PersistentListener) ov.getObject();
-				listener.onAfterReflect(AbstractPersister.this,
-						UniteId.valueOf(key, getName(), null), ov.getVersion(), ov.getDriveIt());
+				listener.onAfterReflect(AbstractPersister.this, UniteId.valueOf(key, getName(), null), ov.getVersion(),
+						ov.getDriveIt());
 			}
 			((Cache.PersistNode) node).setVersion(ov.getVersion());
 			return ov.getObject();
@@ -108,11 +107,19 @@ public abstract class AbstractPersister<E extends Persistent> implements Persist
 	/**
 	 * 检查新ID有重复时的重试次数（不大于0表示不检查）
 	 * 
-	 * @param verifyNewIdTrys
-	 *            重试次数
+	 * @param verifyNewIdTrys 重试次数
 	 */
 	public void setVerifyNewIdTrys(int verifyNewIdTrys) {
 		m_VerifyNewIdTrys = verifyNewIdTrys;
+	}
+
+	/**
+	 * 是否控制对象单例
+	 * 
+	 * @param enabled true/单例，false/非单例
+	 */
+	public void setReachable(boolean enabled) {
+		getCache().setReachable(enabled);
 	}
 
 	public boolean isReloadEnabled() {
@@ -167,8 +174,7 @@ public abstract class AbstractPersister<E extends Persistent> implements Persist
 	/**
 	 * 为持久器产生的对象ID加上标识，标识的范围为0x01~0xFF
 	 * 
-	 * @param id
-	 *            服务器标识
+	 * @param id 服务器标识
 	 */
 	public void setPersisterId(String id) {
 		m_IdGenerator = new IdGenerator.Tick(id);
@@ -261,8 +267,7 @@ public abstract class AbstractPersister<E extends Persistent> implements Persist
 	/**
 	 * 装入对象
 	 * 
-	 * @param id
-	 *            对象ID
+	 * @param id 对象ID
 	 * @return 所加载的对象项及其版本号，没有则返回null
 	 */
 	abstract protected ObjectWithVersion<E> innerLoad(String id);
@@ -270,8 +275,7 @@ public abstract class AbstractPersister<E extends Persistent> implements Persist
 	/**
 	 * 保存对象状态
 	 * 
-	 * @param object
-	 *            对象
+	 * @param object 对象
 	 * @return 对象保存后版本号
 	 */
 	abstract protected String innerSave(E object);
@@ -279,8 +283,7 @@ public abstract class AbstractPersister<E extends Persistent> implements Persist
 	/**
 	 * 新增的对象（用于持久器在对象未刷写前能进行查询）
 	 * 
-	 * @param object
-	 *            新增的对象
+	 * @param object 新增的对象
 	 * @return 创建后的版本号
 	 */
 	abstract protected String innerNew(E object);
@@ -288,8 +291,7 @@ public abstract class AbstractPersister<E extends Persistent> implements Persist
 	/**
 	 * 删除对象
 	 * 
-	 * @param id
-	 *            对象ID
+	 * @param id 对象ID
 	 * @return 成功/失败
 	 */
 	abstract protected boolean innerDelete(String id);
@@ -326,15 +328,13 @@ public abstract class AbstractPersister<E extends Persistent> implements Persist
 			}
 		}
 		// 尝试N次也重复，出错
-		throw new IdDuplicateException(
-				"[" + getName() + "]" + m_VerifyNewIdTrys + "次尝试生成的ID都重复" + m_IdGenerator);
+		throw new IdDuplicateException("[" + getName() + "]" + m_VerifyNewIdTrys + "次尝试生成的ID都重复" + m_IdGenerator);
 	}
 
 	/**
 	 * 由缓存取得
 	 * 
-	 * @param id
-	 *            对象id
+	 * @param id 对象id
 	 * @return 对象
 	 */
 	public E getOfCache(String id) {
@@ -358,8 +358,7 @@ public abstract class AbstractPersister<E extends Persistent> implements Persist
 	/**
 	 * 置入缓存
 	 * 
-	 * @param object
-	 *            要进入缓存的对象实例
+	 * @param object 要进入缓存的对象实例
 	 * @return 在缓冲被替换掉的对象实例
 	 */
 	public E putOfCache(E object) {
@@ -379,8 +378,7 @@ public abstract class AbstractPersister<E extends Persistent> implements Persist
 	/**
 	 * 只由缓存中删除
 	 * 
-	 * @param id
-	 *            缓存项标识
+	 * @param id 缓存项标识
 	 * @return 有则删除且返回删除的项
 	 */
 	public E removeOfCache(String id) {

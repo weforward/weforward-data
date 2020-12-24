@@ -86,4 +86,8 @@ public class LabelBusinessLogger extends AbstractBusinessLogger {
 		return m_LabelSet.toString();
 	}
 
+	@Override
+	public String getServerId() {
+		return m_ServerId;
+	}
 }

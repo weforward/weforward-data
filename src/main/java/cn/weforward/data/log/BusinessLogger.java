@@ -51,13 +51,6 @@ public interface BusinessLogger extends Nameable {
 	void writeLog(String id, String author, String action, String what, String note);
 
 	/**
-	 * 写日志
-	 * 
-	 * @param log 日志
-	 */
-	void writeLog(BusinessLog log);
-
-	/**
 	 * 取得对象的相关日志
 	 * 
 	 * @param id 对象ID

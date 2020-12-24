@@ -3,7 +3,7 @@
 
 	<groupId>cn.weforward</groupId>
 	<artifactId>weforward-data</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<packaging>jar</packaging>
 
 	<name>weforward-data</name>
@@ -43,7 +43,7 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>weforward-protocol</artifactId>
-			<version>1.2.0</version>
+			<version>1.2.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -123,7 +123,7 @@
 						<artifactId>build-maven-plugin</artifactId>
 						<version>1.1.0</version>
 						<configuration>
-							<mainVersion>1.1</mainVersion>
+							<mainVersion>1.2</mainVersion>
 							<outputDirectory>bin</outputDirectory>
 							<excludes>
 								<exclude>simplelogger.properties</exclude>

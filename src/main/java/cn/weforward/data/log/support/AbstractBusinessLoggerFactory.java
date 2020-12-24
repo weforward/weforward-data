@@ -25,10 +25,17 @@ import cn.weforward.data.log.BusinessLoggerFactory;
  */
 public abstract class AbstractBusinessLoggerFactory implements BusinessLoggerFactory {
 	/** 数据项 */
-	private ConcurrentMap<String, BusinessLogger> m_Items;
+	protected ConcurrentMap<String, BusinessLogger> m_Items;
+	/** 服务器标识 */
+	protected String m_ServerId;
 
-	public AbstractBusinessLoggerFactory() {
+	public AbstractBusinessLoggerFactory(String serverId) {
 		m_Items = new ConcurrentHashMap<>();
+		m_ServerId=serverId;
+	}
+	
+	public String getServerId() {
+		return m_ServerId;
 	}
 
 	@Override

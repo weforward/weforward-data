@@ -23,15 +23,13 @@ import cn.weforward.data.log.support.AbstractBusinessLoggerFactory;
 public class LabelBusinessLoggerFactory extends AbstractBusinessLoggerFactory {
 	/** label工厂 */
 	private LabelSetFactory m_Factory;
-	/** 服务器标识 */
-	private String m_ServerId;
 
 	public LabelBusinessLoggerFactory(LabelSetFactory factory) {
 		this(factory, null);
 	}
 
 	public LabelBusinessLoggerFactory(LabelSetFactory factory, String serverId) {
-		m_ServerId = serverId;
+		super(serverId);
 		m_Factory = factory;
 	}
 
@@ -43,5 +41,4 @@ public class LabelBusinessLoggerFactory extends AbstractBusinessLoggerFactory {
 	protected BusinessLogger doCreateLogger(String name) {
 		return new LabelBusinessLogger(m_ServerId, m_Factory, name);
 	}
-
 }

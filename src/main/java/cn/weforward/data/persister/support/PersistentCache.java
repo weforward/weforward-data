@@ -62,8 +62,7 @@ public abstract class PersistentCache<E extends Persistent> extends LruCache<Str
 				return;
 			}
 			persist(v, this);
-			// persist(getValue(), this);
-			putLru(this);
+			// PersistentCache.this.putLru(this);
 		}
 
 		/**
@@ -174,6 +173,7 @@ public abstract class PersistentCache<E extends Persistent> extends LruCache<Str
 
 	@Override
 	protected void afterNodeUpdate(Node<String, E> p) {
+		// 独立flush，不进入更新链表批量更新，更新LRU即可
 		putLru(p);
 	}
 

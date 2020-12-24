@@ -12,14 +12,14 @@ package cn.weforward.data.counter.label;
 
 import cn.weforward.common.GcCleanable;
 import cn.weforward.common.ResultPage;
-import cn.weforward.common.sys.GcCleaner;
 import cn.weforward.data.array.Label;
 import cn.weforward.data.array.LabelSet;
 import cn.weforward.data.array.LabelSetFactory;
-import cn.weforward.data.counter.Counter;
 import cn.weforward.data.counter.CounterFactory;
-import cn.weforward.data.counter.support.AbstractCounterFactory;
-import cn.weforward.data.util.Flusher;
+import cn.weforward.data.counter.support.CounterItem;
+import cn.weforward.data.counter.support.DbCounter;
+import cn.weforward.data.counter.support.DbCounter.DirtyData;
+import cn.weforward.data.counter.support.DbCounterFactory;
 
 /**
  * 基于labelset的计数器实现
@@ -29,43 +29,12 @@ import cn.weforward.data.util.Flusher;
  * @author liangyi
  *
  */
-public class LabelCounterFactory extends AbstractCounterFactory
-		implements CounterFactory, GcCleanable {
+public class LabelCounterFactory extends DbCounterFactory implements CounterFactory, GcCleanable {
 	protected LabelSet<CounterItem> m_Labelset;
-	protected String m_ServerId;
-	protected Flusher m_Flusher;
-	protected boolean m_CopyOnFlush;
 
 	public LabelCounterFactory(LabelSetFactory factory, String serverId) {
-		m_ServerId = serverId;
+		super(serverId);
 		m_Labelset = factory.createLabelSet("__counter", CounterItem._Mapper);
-		GcCleaner.register(this);
-	}
-
-	public void setFlusher(Flusher flusher) {
-		m_Flusher = flusher;
-	}
-
-	public Flusher getFlusher() {
-		return m_Flusher;
-	}
-
-	public String getServerId() {
-		return m_ServerId;
-	}
-
-	/**
-	 * 开启/关闭刷写时先复制待更新列表，用于在LabelSet.put慢速或直接写入的情况下使用
-	 * 
-	 * @param enabled
-	 *            是否开启
-	 */
-	public void setCopyOnFlush(boolean enabled) {
-		m_CopyOnFlush = enabled;
-	}
-
-	public boolean isCopyOnFlush() {
-		return m_CopyOnFlush;
 	}
 
 	@Override
@@ -74,19 +43,11 @@ public class LabelCounterFactory extends AbstractCounterFactory
 		return new LabelCounter(this, m_Labelset.openLabel(label), name);
 	}
 
-	@Override
-	public void onGcCleanup(int policy) {
-		for (Counter c : this) {
-			if (c instanceof LabelCounter) {
-				((LabelCounter) c).onGcCleanup(policy);
-			}
-		}
-	}
-
-	public CounterItem getItem(LabelCounter counter, String key) {
+	protected CounterItem doLoad(DbCounter counter, String key) {
+		LabelCounter labelCounter = (LabelCounter) counter;
 		// 查出所有服务器的数据器相应label
-		CounterItem item = ((null == counter) ? null : counter.m_Label.get(key));
-		ResultPage<Label<CounterItem>> rp = m_Labelset.startsWith(counter.getName() + ".");
+		CounterItem item = ((null == labelCounter) ? null : labelCounter.m_Label.get(key));
+		ResultPage<Label<CounterItem>> rp = m_Labelset.startsWith(labelCounter.getName() + ".");
 		if (rp.getCount() <= 1) {
 			return item;
 		}
@@ -99,7 +60,7 @@ public class LabelCounterFactory extends AbstractCounterFactory
 		// 把除当前服务器外的所有服务器的值累计到item.hold
 		CounterItem other;
 		for (Label<CounterItem> p : rp) {
-			if (p == counter.m_Label) {
+			if (p == labelCounter.m_Label) {
 				// 排除
 				continue;
 			}
@@ -113,5 +74,25 @@ public class LabelCounterFactory extends AbstractCounterFactory
 			item.hold += other.value;
 		}
 		return item;
+	}
+
+	@Override
+	protected void doUpdate(DbCounter counter, DirtyData data) {
+		LabelCounter labelCounter = (LabelCounter) counter;
+		try {
+			while (data.hasNext()) {
+				CounterItem item = data.next();
+				if (null != item) {
+					labelCounter.m_Label.put(item, Label.OPTION_FORCE);
+				}
+			}
+		} catch (Exception e) {
+			data.abort();
+		}
+	}
+
+	@Override
+	protected void doNew(DbCounter counter, CounterItem item) {
+		((LabelCounter) counter).m_Label.put(item, Label.OPTION_FORCE);
 	}
 }
