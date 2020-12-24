@@ -39,7 +39,7 @@ public class IndexAttributeVo implements IndexAttribute {
 	/**
 	 * 构造类
 	 * 
-	 * @param 参数对
+	 * @param pair 参数对
 	 * @return 属性vo
 	 * @deprecated 拼写错误使用 {@link #valueOf(KvPair)}
 	 */
@@ -51,7 +51,7 @@ public class IndexAttributeVo implements IndexAttribute {
 	/**
 	 * 构造类
 	 * 
-	 * @param 参数对
+	 * @param pair 参数对
 	 * @return 属性vo
 	 */
 	public static IndexAttributeVo valueOf(KvPair<String, String> pair) {

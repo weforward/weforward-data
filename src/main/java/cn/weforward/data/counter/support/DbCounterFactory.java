@@ -98,7 +98,7 @@ public abstract class DbCounterFactory extends AbstractCounterFactory
 	/**
 	 * 更新计数项到数据库
 	 * 
-	 * @param counterO
+	 * @param counter
 	 *            计数器
 	 * @param data
 	 *            要更新的计数项列表
