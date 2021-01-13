@@ -1,0 +1,63 @@
+
+= Weforward Data Mysql
+
+Weforward Data Mysql项目是 link:../weforward-data/README.adoc[Weforward Data]项目基于mysql的实现
+
+== 链接格式
+
+jdbc:mysql://[host]:[port]/[database]?user=[username]&password=[password]
+
+ 如::jdbc:mysql://127.0.0.1:3306/test?user=root&password=123456
+ 
+
+== 注意事项
+
+1.date对象为GMT时间格式的字符串,存储的数据类型为CHAR
+
+2.vo对象存储的数据类型为JSON
+
+3.列表对象存储的数据类型为JSON
+
+4.@Index只支持第一级的属性，VO内的属性不支持索引
+
+如下:
+[source.java]
+----
+class A {
+	@Index
+	protected String m_Name;
+	
+	protected B m_Vo;
+}
+class B{
+	@Index
+	protected String m_ChildName;
+}
+----
+只会建立m_Name索引，不会建立m_ChildName索引
+
+5.列表属性不支持条件搜索
+
+6.不存在的列默认认为值是null
+如以上条件搜索将返回的有如果:
+[source.java]
+----
+ps.search(ConditionUtil.eq(ConditionUtil.field("我不存在"), (String) null))
+----
+
+7.属性的列为动态创建的，当出现第一条该列属性不为null时创建。
+
+8.当字符串超过VARCHE的长度时会动态扩展，扩展结果为DefaultStringLength的倍数
+
+== PersisterFactory使用
+
+[source,java]
+----
+MysqlPersisterFactory factory = new MysqlPersisterFactory(connection, "test");
+factory.setServerId("x00ff");//服务器id，每台服务器唯一即可
+factory.setFlusher(new DelayFlusher());
+//m_Factory.setDefaultStringLength(128); //默认的字符串长度
+----
+
+
+
