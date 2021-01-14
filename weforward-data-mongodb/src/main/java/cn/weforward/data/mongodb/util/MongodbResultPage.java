@@ -182,7 +182,7 @@ public abstract class MongodbResultPage<E> implements ResultPage<E>, Closeable {
 
 	@Override
 	public E move(int pos) {
-		if (null != m_Caches && m_Caches.size() >= pos) {
+		if (null != m_Caches && m_Caches.size() > pos) {
 			Document v = m_Caches.get(pos);
 			for (int i = pos + 1; i < m_Caches.size(); i++) {
 				m_Caches.remove(i);
