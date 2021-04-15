@@ -1,0 +1,58 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>cn.weforward</groupId>
+		<artifactId>weforward-data</artifactId>
+		<version>${revision}</version>
+	</parent>
+
+	<artifactId>weforward-data-elasticsearch</artifactId>
+	<packaging>jar</packaging>
+
+	<name>weforward-data-elasticsearch</name>
+
+
+	<developers>
+		<developer>
+			<name>wf</name>
+			<email>wf@weforward.cn</email>
+		</developer>
+	</developers>
+
+	<licenses>
+		<license>
+			<name>The MIT License</name>
+			<url>http://opensource.org/licenses/MIT</url>
+		</license>
+	</licenses>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>weforward-data-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20200518</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.0.9</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.elasticsearch.client</groupId>
+			<artifactId>elasticsearch-rest-client</artifactId>
+			<version>7.10.2</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>weforward-data-elasticsearch</finalName>
+	</build>
+</project>

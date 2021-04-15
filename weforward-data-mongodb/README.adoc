@@ -1,0 +1,35 @@
+
+= Weforward Data Mongodb
+
+Weforward Data MongoDB项目是 link:../weforward-data/README.adoc[Weforward Data]项目基于mongodb的实现
+
+== 链接格式
+
+mongodb+srv://[username:password@]host[/[database][?options]]
+
+ 如:mongodb://admin:123@127.0.0.1:21000/?serverselectiontimeoutms=3000
+
+== PersisterFactory使用
+
+[source,java]
+----
+MongodbPersisterFactory factory = new MongodbPersisterFactory(connection, "test");
+factory.setServerId("x00ff");//服务器id，每台服务器唯一即可
+factory.setFlusher(new DelayFlusher());
+----
+
+== LabelsetFactory使用
+
+[source,java]
+----
+MongodbLabelSetFactory factory = new MongodbLabelSetFactory(connection, "test");
+factory.setServerId("x00ff");//服务器id，每台服务器唯一即可
+----
+
+== SearcherFactory
+
+[source,java]
+----
+MongodbSearcherFactory factory = new MongodbSearcherFactory(connection, "testsearch");
+factory.setServerId("x00ff");//服务器id，每台服务器唯一即可
+----
