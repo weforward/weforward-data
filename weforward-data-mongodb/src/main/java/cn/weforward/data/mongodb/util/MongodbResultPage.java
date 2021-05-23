@@ -100,6 +100,9 @@ public abstract class MongodbResultPage<E> implements ResultPage<E>, Closeable {
 
 	@Override
 	public void setPageSize(int size) {
+		if(size<0) {
+			throw new IllegalArgumentException("pageSize必须大于0");
+		}
 		m_PageSize = size;
 	}
 
