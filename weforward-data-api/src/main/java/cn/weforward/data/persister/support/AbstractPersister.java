@@ -366,7 +366,7 @@ public abstract class AbstractPersister<E extends Persistent> implements Persist
 
 	public boolean hold(E object) {
 		UniteId unid = object.getPersistenceId();
-		if (UniteId.isEmtpy(unid)) {
+		if (UniteId.isEmpty(unid)) {
 			// 不允许置入空ID的对象
 			throw new IllegalArgumentException("Object persistence ID is null");
 		}
@@ -387,7 +387,7 @@ public abstract class AbstractPersister<E extends Persistent> implements Persist
 	 */
 	public E putOfCache(E object) {
 		UniteId unid = object.getPersistenceId();
-		if (UniteId.isEmtpy(unid)) {
+		if (UniteId.isEmpty(unid)) {
 			// 不允许置入空ID的对象
 			throw new IllegalArgumentException("Object persistence ID is null");
 		}
@@ -475,7 +475,7 @@ public abstract class AbstractPersister<E extends Persistent> implements Persist
 		}
 
 		UniteId unid = object.getPersistenceId();
-		if (UniteId.isEmtpy(unid)) {
+		if (UniteId.isEmpty(unid)) {
 			// 不允许置入空ID的对象
 			throw new IllegalArgumentException("persistence ID is null");
 		}

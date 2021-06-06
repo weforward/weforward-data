@@ -103,8 +103,19 @@ public final class UniteId extends cn.weforward.common.UniteId {
 	 * @param unid 联合标识
 	 * @return true/false
 	 */
-	public static final boolean isEmtpy(UniteId unid) {
+	public static final boolean isEmpty(UniteId unid) {
 		return (null == unid || 0 == unid.m_Unite.length());
+	}
+
+	/**
+	 * 联合标识是否为空
+	 * 
+	 * @deprecated 拼写错误
+	 * @param unid 联合标识
+	 * @return true/false
+	 */
+	public static final boolean isEmtpy(UniteId unid) {
+		return isEmpty(unid);
 	}
 
 	/**

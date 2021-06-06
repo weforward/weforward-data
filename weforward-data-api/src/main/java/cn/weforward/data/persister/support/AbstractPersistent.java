@@ -261,7 +261,7 @@ public abstract class AbstractPersistent<E extends BusinessDi>
 	 * 生成新的ID
 	 */
 	protected void genPersistenceId() {
-		if (!UniteId.isEmtpy(m_Id)) {
+		if (!UniteId.isEmpty(m_Id)) {
 			throw new UnsupportedOperationException("不能重复初始化ID：" + m_Id);
 		}
 		m_Id = getPersister().getNewId();
@@ -273,7 +273,7 @@ public abstract class AbstractPersistent<E extends BusinessDi>
 	 * @param prefix 前缀
 	 */
 	protected void genPersistenceId(String prefix) {
-		if (!UniteId.isEmtpy(m_Id)) {
+		if (!UniteId.isEmpty(m_Id)) {
 			throw new UnsupportedOperationException("不能重复初始化ID：" + m_Id);
 		}
 		m_Id = getPersister().getNewId(prefix);
@@ -368,7 +368,7 @@ public abstract class AbstractPersistent<E extends BusinessDi>
 		// 反射后去除不持久的标记
 		setPersistenceMark(-PERSISTENCE_TRANSIENT);
 		// m_PersistenceMark &= (~PERSISTENCE_TRANSIENT);
-		if (UniteId.isEmtpy(m_Id)) {
+		if (UniteId.isEmpty(m_Id)) {
 			// 恢复ID
 			m_Id = id;
 		}
@@ -379,7 +379,7 @@ public abstract class AbstractPersistent<E extends BusinessDi>
 
 	@Override
 	public void onBeforePersistence(Persister<? extends Persistent> persister) {
-		if (UniteId.isEmtpy(m_Id)) {
+		if (UniteId.isEmpty(m_Id)) {
 			// 持久前必须生成对象ID
 			genPersistenceId();
 		}
