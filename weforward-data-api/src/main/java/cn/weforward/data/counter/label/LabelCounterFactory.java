@@ -30,8 +30,6 @@ import cn.weforward.data.counter.support.DbCounterFactory;
  * 以“计数器名.服务器标识”为label组织，通过把相同计数器名的多个服务器label相加则为总计数值，由此实现计数器的数据分布
  * 
  * @deprecated
- * @see cn.weforward.data.mongodb.counter.MongodbCounterFactory
- * @see cn.weforward.data.mysql.counter.MysqlCounterFactory
  */
 public class LabelCounterFactory extends DbCounterFactory implements CounterFactory, GcCleanable {
 	protected final static Logger _Logger = LoggerFactory.getLogger(LabelCounterFactory.class);

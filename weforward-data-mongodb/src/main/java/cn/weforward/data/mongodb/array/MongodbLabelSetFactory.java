@@ -67,7 +67,7 @@ public class MongodbLabelSetFactory extends AbstractLabelSetFactory implements G
 	/**
 	 * 设置lableset的名称前缀
 	 * 
-	 * @param prefix
+	 * @param prefix 名称前缀
 	 */
 	public void setNamePrefix(String prefix) {
 		m_NamePrefix = prefix;

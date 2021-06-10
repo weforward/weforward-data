@@ -25,14 +25,9 @@
 	</licenses>
 
 	<properties>
-		<revision>1.2.1.219325</revision>
+		<revision>1.2.2</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
-	<scm>
-		<url>http://svn.navboy.com/omnigis/honinyun/weforward/trunk/weforward-data/</url>
-		<tag>http://svn.navboy.com/omnigis/honinyun/weforward/tags/weforward-data/</tag>
-	</scm>
 
 	<modules>
 		<module>weforward-data-api</module>
