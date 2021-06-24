@@ -41,6 +41,7 @@
 		<module>weforward-data-api</module>
 		<module>weforward-data-mongodb</module>
 		<module>weforward-data-mysql</module>
+		<module>weforward-data-elasticsearch</module>
 	</modules>
 
 	<dependencyManagement>
